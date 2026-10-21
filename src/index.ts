@@ -43,21 +43,12 @@ if (isDev) {
 
 	if (!process.env.BETA_GUILD_ID)
 		{throw new Error("BETA_GUILD_ID not found in .env");}
-
-	if (!process.env.BETA_MONGO_URI)
-		{throw new Error("BETA_MONGO_URI not found in .env");}
 } else {
 	if (!process.env.TOKEN)
 		{throw new Error("Bot token not found in .env");}
 
 	if (!process.env.CLIENT_ID)
 		{throw new Error("Client ID not found in .env");}
-
-	if (!process.env.GUILD_ID)
-		{throw new Error("Guild ID not found in .env");}
-
-	if (!process.env.MONGO_URI)
-		{throw new Error("Mongo URI not found in .env");}
 }
 
 const envToken = isDev ? process.env.BETA_TOKEN : process.env.TOKEN;
