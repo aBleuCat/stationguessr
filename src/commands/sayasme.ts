@@ -51,3 +51,5 @@ const sayasmeCommand = {
 		}
 	}
 }
+
+export default sayasmeCommand;
