@@ -21,7 +21,7 @@ const pingCommand = {
 
 		return interaction.reply({
 			content:
-				`Pong!\nResponded in ${latency} milleseconds\n` +
+				`Pong!\nResponded in ${latency} milliseconds\n` +
 				`Command sent at ${formatTime(timeSent, locale)} ` +
 				`and processed at ${formatTime(now, locale)}`,
 		});
