@@ -63,7 +63,7 @@ const envMongoUri = isDev
 	: process.env.MONGO_URI;
 
 // Narrow from string | undefined — guaranteed by the throws above
-if (!envToken || !envClientId || !envGuildId || !envMongoUri)
+if (!envToken || !envClientId || !envGuildId)
 	{throw new Error(
 		"Required env vars missing after validation (should be unreachable)",
 	);}
