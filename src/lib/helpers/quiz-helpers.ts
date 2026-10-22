@@ -1,5 +1,6 @@
 import { setTimeout as sleep } from "node:timers/promises";
 import { EmbedBuilder, type GuildTextBasedChannel } from "discord.js";
+import { Temporal } from "@js-temporal/polyfill";
 import config from "../config.js";
 import type {
 	PoolQuestion,
@@ -97,8 +98,10 @@ export async function expireAnsWindow(
 
 	let description = `Nobody answered in ${quiz.ansWindow}s! The answer to "${quiz.currentQuestion.question}" was "${quiz.currentQuestion.answerTxt}"`;
 	if (quiz.rounds > 0 && quiz.remainingPool.length > 0) {
-		const unixTimestamp = Math.floor(
-			(Date.now() + (quiz.delay * 1000)) / 1000,
+		const unixTimestamp = Math.round(
+			Temporal.Now.instant()
+				.add({ milliseconds: Math.trunc(quiz.delay * 1000) })
+				.epochMilliseconds / 1000,
 		);
 		description += `\n\nNext question <t:${unixTimestamp}:R>`;
 	} else {
@@ -247,8 +250,10 @@ export async function progressQuiz(channel: GuildTextBasedChannel) {
 	quiz.currentQuestion = { ...question, status: "open" };
 	quiz.rounds--;
 	const cQ = quiz.currentQuestion;
-	const unixTimestamp = Math.floor(
-		(Date.now() + (quiz.ansWindow * 1000)) / 1000,
+	const unixTimestamp = Math.round(
+		Temporal.Now.instant()
+			.add({ milliseconds: Math.trunc(quiz.ansWindow * 1000) })
+			.epochMilliseconds / 1000,
 	);
 	const embed = new EmbedBuilder()
 		.setTitle(
@@ -273,7 +278,7 @@ export async function progressQuiz(channel: GuildTextBasedChannel) {
 		priority: 3,
 	});
 
-	quiz.startTime = Date.now();
+	quiz.startTime = Temporal.Now.instant();
 	activateAnsWindow(channel, quiz.ansWindow);
 }
 

@@ -10,6 +10,7 @@ import type {
 	SlashCommandSubcommandsOnlyBuilder,
 	Collection,
 } from "discord.js";
+import type { Temporal } from "@js-temporal/polyfill";
 
 export type SlashCommandConfig = {
 	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
@@ -94,7 +95,7 @@ export type ActiveQuiz = {
 	scores: Record<string, number>;
 	/** * The timer for the current question; when the round ends, the timer is here so that it is easy to clear */
 	timer?: NodeJS.Timeout | undefined;
-	startTime?: number;
+	startTime?: Temporal.Instant;
 	normalize?:
 		| undefined
 		| ((value: string) => string)

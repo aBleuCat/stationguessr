@@ -1,5 +1,6 @@
 import { setTimeout as sleep } from "node:timers/promises";
 import { EmbedBuilder, type Message } from "discord.js";
+import { Temporal } from "@js-temporal/polyfill";
 import { isGuildTextBasedChannel } from "../../type-utils.js";
 import { quizzes, progressQuiz } from "../helpers/quiz-helpers.js";
 import queueMessage from "../helpers/queue-message.js";
@@ -44,13 +45,17 @@ async function handleQuiz(message: Message) {
 
 	let responseMessage = `The answer to "${quiz.currentQuestion.question}" was "${quiz.currentQuestion.answerTxt}"`;
 	if (quiz.startTime !== undefined) {
-		const stopwatchTime = (Date.now() - quiz.startTime) / 1000;
+		const stopwatchTime = Temporal.Now.instant()
+			.since(quiz.startTime)
+			.total({ unit: "seconds" });
 		responseMessage += `\n${author.displayName} answered in ${stopwatchTime.toFixed(2)}s`;
 	}
 
 	if (quiz.rounds > 0 && quiz.remainingPool.length > 0) {
-		const unixTimestamp = Math.floor(
-			(Date.now() + (quiz.delay * 1000)) / 1000,
+		const unixTimestamp = Math.round(
+			Temporal.Now.instant()
+				.add({ milliseconds: Math.trunc(quiz.delay * 1000) })
+				.epochMilliseconds / 1000,
 		);
 		responseMessage += `\n\n-# Next question <t:${unixTimestamp}:R>`; // Put it in the description because the footer does not support timestamps
 	} else {
