@@ -3,6 +3,7 @@ import {
 	type Message,
 	type Client,
 } from "discord.js";
+import { testMessageTrigger } from "../triggers/message-trigger.js";
 
 async function executeDMHandlers(
 	message: Message,
@@ -20,7 +21,7 @@ async function executePrimaryHandlers(
 	client: Client,
 ) {
 	try {
-		/* primary message trigger functions */
+		testMessageTrigger(message);
 	} catch (error) {
 		console.error("Primary trigger error", error);
 	}
@@ -35,18 +36,17 @@ async function executeSecondaryHandlers(message: Message, client: Client) {
 }
 
 function registerMessageHandler(client: Client) {
-	client.on(Events.MessageCreate, (message: Message) => {
+	client.on(Events.MessageCreate, (discordMessage: Message) => {
 		(async (message: Message) => {
-			if (!message.guild || !message.author) {
-				executeDMHandlers(message, client);
-				return;
+			if (!message.guild) {
+				return executeDMHandlers(message, client);
 			}
 
 			if (message.author.bot) return;
 			
 			await executePrimaryHandlers(message, client);
 			await executeSecondaryHandlers(message, client);
-		})(message);
+		})(discordMessage);
 	});
 }
 
