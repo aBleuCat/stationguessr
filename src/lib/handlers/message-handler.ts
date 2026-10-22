@@ -3,7 +3,8 @@ import {
 	type Message,
 	type Client,
 } from "discord.js";
-import { testMessageTrigger } from "../triggers/message-trigger.js";
+import testMessageTrigger from "../triggers/message-trigger.js";
+import handleQuiz from "../triggers/quiz-handler.js";
 
 async function executeDMHandlers(
 	message: Message,
@@ -22,6 +23,7 @@ async function executePrimaryHandlers(
 ) {
 	try {
 		testMessageTrigger(message);
+		await handleQuiz(message);
 	} catch (error) {
 		console.error("Primary trigger error", error);
 	}

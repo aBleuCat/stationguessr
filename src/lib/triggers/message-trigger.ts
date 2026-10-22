@@ -12,7 +12,7 @@ function didNewTrigger(string: string): boolean {
 	return true;
 }
 
-export function testMessageTrigger(message: Message) {
+function testMessageTrigger(message: Message) {
 	const { content, channel, author } = message;
 	if (config.ADMINS.has(author.id)) {
 		const didNewTrig = didNewTrigger(content);
@@ -28,3 +28,5 @@ export function testMessageTrigger(message: Message) {
 		}).catch((error: unknown) => { console.error(error) });
 	}
 }
+
+export default testMessageTrigger;
