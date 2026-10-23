@@ -1,5 +1,5 @@
-import wordsToNumbers from "@codecompose/words-to-numbers";
-import type { Pool } from "../types.js";
+import wordsToNumbers from '@codecompose/words-to-numbers';
+import type {Pool, PoolQuestion} from '../types.js';
 
 const stationNormalizer = (string: string): string => {
 	string = string
@@ -46,75 +46,142 @@ const stationNormalizer = (string: string): string => {
 	return string.trim();
 };
 
+const questionBank: Array<PoolQuestion & {tags: string[]}> = [
+	{
+		question: '0+0=',
+		answer: /^0$/v,
+		answerTxt: '0',
+		tags: ['test', 'math'],
+	},
+	{
+		question: '2+2=',
+		answer: /^4$/v,
+		answerTxt: '4',
+		tags: ['test', 'math'],
+	},
+	{
+		question: '8+8=',
+		answer: /^16$/v,
+		answerTxt: '16',
+		tags: ['test', 'math'],
+	},
+	{
+		question: '10,000+10,000=',
+		answer: /^20000$/v,
+		answerTxt: '20,000',
+		tags: ['test', 'math'],
+	},
+	{
+		question: '1,000,000*10=',
+		answer: /^(?:10000000|ten-? ?million)$/iv,
+		answerTxt: '10,000,000',
+		tags: ['test', 'math'],
+	},
+	{
+		question: '900000000000000*900000000000000',
+		answer:
+			/^(?:810(?:000){9}|eight-? ?hundred-? ?ten-? ?octillion)$/iv,
+		answerTxt: 'eight hundred ten octillion', // As per request from my younger brother
+		tags: ['test', 'math'],
+	},
+	{
+		question: '8.1*10.1=',
+		answer: /^81\.81$/v,
+		answerTxt: '81.81',
+		tags: ['test', 'math'],
+	},
+	{
+		question: 'respond with test',
+		answer: /test/iv,
+		answerTxt: 'test',
+		image: [
+			'https://cdn.discordapp.com/attachments/1068188325380374548/1516102329164763168/tier_newer.gif',
+			'https://cdn.discordapp.com/attachments/1282840454278156353/1519826942659133500/umayyadNOW.gif',
+		],
+		tags: ['test', 'images'],
+	},
+	{
+		question: 'respond with trial',
+		answer: /trial/iv,
+		answerTxt: 'trial',
+		image: [
+			'https://cdn.discordapp.com/attachments/1358244650716106865/1503170758363320491/togif.gif',
+			'https://cdn.discordapp.com/attachments/1448818023921094679/1500295196506591385/attachment.gif',
+		],
+		tags: ['test', 'images'],
+	},
+];
+
 const pools: Record<string, Pool> = {
 	/** **Placeholder** - The pool "mathTest" is a placeholder for testing */
 	mathTest: {
 		pool: [
 			{
-				question: "0+0=",
+				question: '0+0=',
 				answer: /^0$/v,
-				answerTxt: "0",
+				answerTxt: '0',
 			},
 			{
-				question: "2+2=",
+				question: '2+2=',
 				answer: /^4$/v,
-				answerTxt: "4",
+				answerTxt: '4',
 			},
 			{
-				question: "8+8=",
+				question: '8+8=',
 				answer: /^16$/v,
-				answerTxt: "16",
+				answerTxt: '16',
 			},
 			{
-				question: "10,000+10,000=",
+				question: '10,000+10,000=',
 				answer: /^20000$/v,
-				answerTxt: "20,000",
+				answerTxt: '20,000',
 			},
 			{
-				question: "1,000,000*10=",
+				question: '1,000,000*10=',
 				answer: /^(?:10000000|ten-? ?million)$/iv,
-				answerTxt: "10,000,000",
+				answerTxt: '10,000,000',
 			},
 			{
-				question: "900000000000000*900000000000000",
-				answer: /^(?:810(?:000){9}|eight-? ?hundred-? ?ten-? ?octillion)$/iv,
-				answerTxt: "eight hundred ten octillion", // As per request from my younger brother
+				question: '900000000000000*900000000000000',
+				answer:
+					/^(?:810(?:000){9}|eight-? ?hundred-? ?ten-? ?octillion)$/iv,
+				answerTxt: 'eight hundred ten octillion', // As per request from my younger brother
 			},
 			{
-				question: "8.1*10.1=",
+				question: '8.1*10.1=',
 				answer: /^81\.81$/v,
-				answerTxt: "81.81",
+				answerTxt: '81.81',
 			},
 		],
 		metadata: {
-			normalizer: (string) => string.replaceAll(",", ""),
+			normalizer: (string) =>
+				String(wordsToNumbers(string) ?? string.replaceAll(',', '')),
 		},
 	},
 	/** **Placeholder** - The pool "test" is a placeholder for testing */
 	test: {
 		pool: [
 			{
-				question: "respond with test",
+				question: 'respond with test',
 				answer: /test/iv,
-				answerTxt: "test",
+				answerTxt: 'test',
 				image: [
-					"https://cdn.discordapp.com/attachments/1068188325380374548/1516102329164763168/tier_newer.gif",
-					"https://cdn.discordapp.com/attachments/1282840454278156353/1519826942659133500/umayyadNOW.gif",
+					'https://cdn.discordapp.com/attachments/1068188325380374548/1516102329164763168/tier_newer.gif',
+					'https://cdn.discordapp.com/attachments/1282840454278156353/1519826942659133500/umayyadNOW.gif',
 				],
 			},
 			{
-				question: "respond with trial",
+				question: 'respond with trial',
 				answer: /trial/iv,
-				answerTxt: "trial",
+				answerTxt: 'trial',
 				image: [
-					"https://cdn.discordapp.com/attachments/1358244650716106865/1503170758363320491/togif.gif",
-					"https://cdn.discordapp.com/attachments/1448818023921094679/1500295196506591385/attachment.gif",
+					'https://cdn.discordapp.com/attachments/1358244650716106865/1503170758363320491/togif.gif',
+					'https://cdn.discordapp.com/attachments/1448818023921094679/1500295196506591385/attachment.gif',
 				],
 			},
 		],
 		metadata: {
-			normalizer: (string) =>
-				string.replaceAll("the", "").trim(),
+			normalizer: (string) => string.replaceAll('the', '').trim(),
 		},
 	},
 };
@@ -126,15 +193,15 @@ async function expandBranches(link: string): Promise<string[]> {
 // On startup
 export async function doBranchShit() {
 	const promises: Array<Promise<void>> = [];
-	for (const { pool } of Object.values(pools)) {
+	for (const {pool} of Object.values(pools)) {
 		for (const question of pool) {
-			if (typeof question.image === "string") {
-                promises.push(
-                    expandBranches(question.image).then((expanded) => {
-                        question.image = expanded;
-                    })
-                );
-            }
+			if (typeof question.image === 'string') {
+				promises.push(
+					expandBranches(question.image).then((expanded) => {
+						question.image = expanded;
+					}),
+				);
+			}
 		}
 	}
 

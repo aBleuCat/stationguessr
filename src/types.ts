@@ -9,8 +9,8 @@ import type {
 	AutocompleteInteraction,
 	SlashCommandSubcommandsOnlyBuilder,
 	Collection,
-} from "discord.js";
-import type { Temporal } from "@js-temporal/polyfill";
+} from 'discord.js';
+import type {Temporal} from '@js-temporal/polyfill';
 
 export type SlashCommandConfig = {
 	data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
@@ -18,9 +18,7 @@ export type SlashCommandConfig = {
 };
 
 export type SlashCommandModule = SlashCommandConfig & {
-	autocomplete?(
-		interaction: AutocompleteInteraction,
-	): Promise<void>;
+	autocomplete?(interaction: AutocompleteInteraction): Promise<void>;
 };
 
 export type AnyChannel =
@@ -81,7 +79,7 @@ export type PreQuiz = {
 	 Questions** means that questions can repeat but the same image cannot. E.g., you can get times square twice but not same image of it
 	 All** means that both images and questions can repeat
 	 */
-	repeat: "none" | "questions" | "all";
+	repeat: 'none' | 'questions' | 'all';
 };
 /**
  Represents a quiz actively managed by quiz handlers and in use for discord
@@ -94,7 +92,7 @@ export type ActiveQuiz = {
 		question: string;
 		answer: RegExp;
 		answerTxt: string;
-		status: "idle" | "open" | "closed";
+		status: 'idle' | 'open' | 'closed';
 		image?: string | string[];
 	};
 	scores: Record<string, number>;
@@ -117,8 +115,7 @@ export type Pool = {
 	pool: PoolQuestion[];
 };
 
-
-declare module "discord.js" {
+declare module 'discord.js' {
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Client {
 		commands: Collection<string, Command>;

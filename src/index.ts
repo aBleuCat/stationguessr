@@ -1,12 +1,12 @@
 // Node.js
-import process from "node:process";
-import http from "node:http";
-import https from "node:https";
-import fs from "node:fs";
-import path from "node:path";
-import { pathToFileURL } from "node:url";
+import process from 'node:process';
+import http from 'node:http';
+import https from 'node:https';
+import fs from 'node:fs';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
 // .env
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 // Libraries
 import {
 	Client,
@@ -19,37 +19,46 @@ import {
 	type RESTPostAPIChatInputApplicationCommandsJSONBody,
 	ApplicationIntegrationType,
 	InteractionContextType,
-} from "discord.js";
+} from 'discord.js';
 // Types
-import type { Command } from "./types.js";
+import type {Command} from './types.js';
 // Handlers
-import registerInteractionHandler from "./lib/handlers/interaction-handler.js";
-import registerMessageHandler from "./lib/handlers/message-handler.js";
-import { doBranchShit } from "./data/quiz-pools.js";
+import registerInteractionHandler from './lib/handlers/interaction-handler.js';
+import registerMessageHandler from './lib/handlers/message-handler.js';
+import {doBranchShit} from './data/quiz-pools.js';
 // Tasks
-/* insert tasks here */
+/*
+insert tasks here
+*/
 // Logging
-/* insert logging here */
+/*
+insert logging here
+*/
 
 dotenv.config();
 
-const isDev = process.argv[2] === "dev";
+const isDev = process.argv[2] === 'dev';
 
 if (isDev) {
-	if (!process.env.BETA_TOKEN)
-		{throw new Error("BETA_TOKEN not found in .env");}
+	if (!process.env.BETA_TOKEN) {
+		throw new Error('BETA_TOKEN not found in .env');
+	}
 
-	if (!process.env.BETA_CLIENT_ID)
-		{throw new Error("BETA_CLIENT_ID not found in .env");}
+	if (!process.env.BETA_CLIENT_ID) {
+		throw new Error('BETA_CLIENT_ID not found in .env');
+	}
 
-	if (!process.env.BETA_GUILD_ID)
-		{throw new Error("BETA_GUILD_ID not found in .env");}
+	if (!process.env.BETA_GUILD_ID) {
+		throw new Error('BETA_GUILD_ID not found in .env');
+	}
 } else {
-	if (!process.env.TOKEN)
-		{throw new Error("Bot token not found in .env");}
+	if (!process.env.TOKEN) {
+		throw new Error('Bot token not found in .env');
+	}
 
-	if (!process.env.CLIENT_ID)
-		{throw new Error("Client ID not found in .env");}
+	if (!process.env.CLIENT_ID) {
+		throw new Error('Client ID not found in .env');
+	}
 }
 
 const envToken = isDev ? process.env.BETA_TOKEN : process.env.TOKEN;
@@ -64,25 +73,28 @@ const envMongoUri = isDev
 	: process.env.MONGO_URI;
 
 // Narrow from string | undefined — guaranteed by the throws above
-if (!envToken || !envClientId || !envGuildId)
-	{throw new Error(
-		"Required env vars missing after validation (should be unreachable)",
-	);}
+if (!envToken || !envClientId || !envGuildId) {
+	throw new Error(
+		'Required env vars missing after validation (should be unreachable)',
+	);
+}
 
-const PORT = Number.parseInt(process.env.PORT ?? "8000", 10);
-http.createServer((_, result) => {
-	result.writeHead(200, { "Content-Type": "text/plain" });
-	result.end("online");
-}).listen(PORT, "0.0.0.0", () => {
-	console.log(`Web server routing active on port ${PORT}`);
-});
+const PORT = Number.parseInt(process.env.PORT ?? '8000', 10);
+http
+	.createServer((_, result) => {
+		result.writeHead(200, {'Content-Type': 'text/plain'});
+		result.end('online');
+	})
+	.listen(PORT, '0.0.0.0', () => {
+		console.log(`Web server routing active on port ${PORT}`);
+	});
 
-const thisFileExtension = import.meta.url.endsWith(".ts")
-	? ".ts"
-	: ".js";
+const thisFileExtension = import.meta.url.endsWith('.ts')
+	? '.ts'
+	: '.js';
 /* eslint-disable @typescript-eslint/naming-convention */
-const { GuildInstall, UserInstall } = ApplicationIntegrationType;
-const { Guild, BotDM, PrivateChannel } = InteractionContextType;
+const {GuildInstall, UserInstall} = ApplicationIntegrationType;
+const {Guild, BotDM, PrivateChannel} = InteractionContextType;
 /* eslint-enable @typescript-eslint/naming-convention */
 // Client init
 const client = new Client({
@@ -94,24 +106,21 @@ const client = new Client({
 		GatewayIntentBits.GuildVoiceStates,
 	],
 	allowedMentions: {
-		parse: ["users", "roles"], // Prevent everyone pings unless overridden
+		parse: ['users', 'roles'], // Prevent everyone pings unless overridden
 	},
 });
 
 client.commands = new Collection();
 
 function isCommand(commandObject: unknown): commandObject is Command {
-	if (!commandObject) return false;
-	if (typeof commandObject !== "object") return false;
+	if (!commandObject || (typeof commandObject !== "object")) return false;
 	for (const [key, value] of Object.entries(commandObject)) {
-		if (key === "data" && value instanceof SlashCommandBuilder)
+		if ((key === "data" && value instanceof SlashCommandBuilder) || (key === "execute" && typeof value === "function"))
 			{continue;}
 
-		if (key === "execute" && typeof value === "function")
-			{continue;}
-
-		if (key === "autocomplete" && typeof value === "function")
-			{continue;}
+		if (key === 'autocomplete' && typeof value === 'function')
+			continue;
+		}
 
 		return false;
 	}
@@ -140,10 +149,11 @@ async function loadCommandsHelper(
 		const commandModule: unknown = await import(fileUrl);
 		if (
 			commandModule &&
-			typeof commandModule === "object" &&
-			"default" in commandModule
-		)
-			{return commandModule.default;}
+			typeof commandModule === 'object' &&
+			'default' in commandModule
+		) {
+			return commandModule.default;
+		}
 
 		return commandModule;
 	});
@@ -161,10 +171,7 @@ async function loadCommandsHelper(
 
 		// Only apply defaults if integrationTypes & contextTypes haven't been manually set in the file
 		if (!command.data.integration_types) {
-			command.data.setIntegrationTypes([
-				GuildInstall,
-				UserInstall,
-			]);
+			command.data.setIntegrationTypes([GuildInstall, UserInstall]);
 		}
 
 		if (!command.data.contexts) {
@@ -179,20 +186,20 @@ async function loadCommandsHelper(
 }
 
 // Load global commands from commands dir
-const commandsPath = path.resolve(import.meta.dirname, "commands");
+const commandsPath = path.resolve(import.meta.dirname, 'commands');
 const globalCommandFiles = fs
 	.readdirSync(commandsPath)
 	.filter(
 		(file) =>
-			file.endsWith(thisFileExtension) &&
-			!file.endsWith(".d.ts"),
+			file.endsWith(thisFileExtension) && !file.endsWith('.d.ts'),
 	);
 const [globalCommandsData, validCommands] = await loadCommandsHelper(
 	globalCommandFiles,
 	commandsPath,
 );
-for (const command of validCommands)
-	{client.commands.set(command.data.name, command);}
+for (const command of validCommands) {
+	client.commands.set(command.data.name, command);
+}
 
 console.log(
 	`Successfully validated ${validCommands.length} global commands.`,
@@ -201,35 +208,31 @@ console.log(
 // Activate when client logs in
 client.once(Events.ClientReady, () => {
 	(async () => {
-		if (!client.user)
-			{throw new Error(
-				"Client does not have user for some reason",
-			);}
+		if (!client.user) {
+			throw new Error('Client does not have user for some reason');
+		}
 
-		if (isDev)
-			{console.log("[DEV MODE] Running with beta credentials");}
+		if (isDev) {
+			console.log('[DEV MODE] Running with beta credentials');
+		}
 
 		console.log(`Logged in as ${client.user.tag}`);
 		const options = {
-			hostname: "discord.com",
+			hostname: 'discord.com',
 			port: 443,
-			path: "/api/v10/gateway",
-			method: "GET",
-			headers: { "User-Agent": "RenderDiagnostic/1.0" },
+			path: '/api/v10/gateway',
+			method: 'GET',
+			headers: {'User-Agent': 'RenderDiagnostic/1.0'},
 		};
 
 		const request = https.request(options, (result) => {
-			console.log(
-				`Discord API Status: ${result.statusCode}`,
-			);
+			console.log(`Discord API Status: ${result.statusCode}`);
 			if (result.statusCode === 429) {
 				console.error(
 					`[API] IP Banned. Discord is probably rate-limiting this IP. Status ${result.statusCode}`,
 				);
 			} else if (result.statusCode === 200) {
-				console.log(
-					`[API] ✅ Discord API is reachable.`,
-				);
+				console.log(`[API] ✅ Discord API is reachable.`);
 			} else {
 				console.log(
 					`[API] Received status ${result.statusCode} from Discord.`,
@@ -237,37 +240,29 @@ client.once(Events.ClientReady, () => {
 			}
 		});
 
-		request.on("error", (error) => {
-			console.error(
-				`Network Error: ${error.message}`,
-			);
+		request.on('error', (error) => {
+			console.error(`Network Error: ${error.message}`);
 		});
 		request.end();
 
-		const rest = new REST({ version: "10" }).setToken(envToken);
+		const rest = new REST({version: '10'}).setToken(envToken);
 		try {
-			console.log("Refreshing commands...");
+			console.log('Refreshing commands...');
 			if (isDev) {
 				// Dev: all commands go to the beta guild only
 				await rest.put(
-					Routes.applicationGuildCommands(
-						envClientId,
-						envGuildId,
-					),
+					Routes.applicationGuildCommands(envClientId, envGuildId),
 					{
-						body: [
-							...globalCommandsData,
-						],
+						body: [...globalCommandsData],
 					},
 				);
 			} else {
-				await rest.put(
-					Routes.applicationCommands(envClientId),
-					{ body: globalCommandsData },
-				);
+				await rest.put(Routes.applicationCommands(envClientId), {
+					body: globalCommandsData,
+				});
 			}
 
-			console.log("Commands reloaded");
+			console.log('Commands reloaded');
 		} catch (error) {
 			console.error(error);
 		}
@@ -275,7 +270,7 @@ client.once(Events.ClientReady, () => {
 });
 
 // Command execution DM log
-client.on("interactionCreate", (interaction) => {
+client.on('interactionCreate', (interaction) => {
 	(async (interaction) => {
 		if (!interaction.isCommand()) return;
 		const message = `Command: /${interaction.commandName} by ${interaction.user.tag} (${interaction.user.id}) in guild ${interaction.guildId}`;
@@ -293,9 +288,9 @@ await doBranchShit();
 await client.login(envToken);
 
 // Prevent unhandled promise rejections from crashing the bot
-process.on("unhandledRejection", (error) => {
-	console.error("Unhandled Rejection:", error);
+process.on('unhandledRejection', (error) => {
+	console.error('Unhandled Rejection:', error);
 });
-process.on("uncaughtException", (error) => {
-	console.error("Uncaught Exception:", error);
+process.on('uncaughtException', (error) => {
+	console.error('Uncaught Exception:', error);
 });

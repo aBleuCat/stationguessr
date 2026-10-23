@@ -1,6 +1,6 @@
 export default [
 	{
-		prettier: "compat",
+		prettier: true,
 		space: false,
 		semicolon: true,
 	},

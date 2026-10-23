@@ -3,8 +3,8 @@ import {
 	type TextChannel,
 	type NewsChannel,
 	ChannelType,
-} from "discord.js";
-import type { AnyChannel } from "./types.js";
+} from 'discord.js';
+import type {AnyChannel} from './types.js';
 
 export function isGuildTextBasedChannel(
 	channel: AnyChannel,
@@ -17,12 +17,11 @@ export function requireGuildTextBasedChannel(
 		| AnyChannel
 		| undefined
 		// eslint-disable-next-line @typescript-eslint/no-restricted-types
-		| null
-		| undefined,
+		| null,
 ): GuildTextBasedChannel {
 	if (channel && isGuildTextBasedChannel(channel)) return channel;
 	throw new Error(
-		`Expected a guild text-based channel but received: ${channel?.type ?? "null"}`,
+		`Expected a guild text-based channel but received: ${channel?.type ?? 'null'}`,
 	);
 }
 
@@ -31,7 +30,7 @@ function isWebhookableChannel(
 ): channel is TextChannel | NewsChannel {
 	return (
 		channel &&
-		"type" in channel &&
+		'type' in channel &&
 		(channel.type === ChannelType.GuildText ||
 			channel.type === ChannelType.GuildAnnouncement)
 	);
@@ -43,6 +42,6 @@ export function requireWebhookableChannel(
 ): TextChannel | NewsChannel {
 	if (channel && isWebhookableChannel(channel)) return channel;
 	throw new Error(
-		`Expected a text or announcements channel but received: ${channel?.type ?? "null"}`,
+		`Expected a text or announcements channel but received: ${channel?.type ?? 'null'}`,
 	);
 }

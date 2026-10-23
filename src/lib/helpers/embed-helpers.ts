@@ -1,4 +1,4 @@
-import { EmbedBuilder, type APIEmbedField } from "discord.js";
+import {EmbedBuilder, type APIEmbedField} from 'discord.js';
 
 /**
  Converts a dictionary object into a Discord Embed with fields.
@@ -10,42 +10,40 @@ import { EmbedBuilder, type APIEmbedField } from "discord.js";
 function dictToEmbed<T>(
 	title: string,
 	dict: Record<string, T>,
-	style: "normal" | "inline" | "leaderboard" = "normal",
+	style: 'normal' | 'inline' | 'leaderboard' = 'normal',
 	sortFn?: (a: [string, T], b: [string, T]) => number,
 ): EmbedBuilder {
 	const dictArray = Object.entries(dict);
 	if (sortFn) dictArray.sort(sortFn);
 	let fields: APIEmbedField[] = [];
-	if (style === "leaderboard") {
-		const players = dictArray.map(([key]) => key).join("\n");
+	if (style === 'leaderboard') {
+		const players = dictArray.map(([key]) => key).join('\n');
 		const scores = dictArray
 			.map(([, value]) => String(value))
-			.join("\n");
+			.join('\n');
 		fields = [
 			{
-				name: "Player",
-				value: players === "" ? "none" : players,
+				name: 'Player',
+				value: players === '' ? 'none' : players,
 				inline: true,
 			},
 			{
-				name: "Score",
-				value: scores === "" ? "-" : scores,
+				name: 'Score',
+				value: scores === '' ? '-' : scores,
 				inline: true,
 			},
 		];
 	} else {
-		const isInline = style === "inline";
+		const isInline = style === 'inline';
 		fields = dictArray.slice(0, 25).map(([key, value]) => ({
-				name: key,
-				// eslint-disable-next-line unicorn/prefer-unicode-code-point-escapes
-				value: String(value) === "" ? "\u200B" : String(value), // Prevent empty string errors
-				isInline,
-			}));
+			name: key,
+			// eslint-disable-next-line unicorn/prefer-unicode-code-point-escapes
+			value: String(value) === '' ? '\u200B' : String(value), // Prevent empty string errors
+			isInline,
+		}));
 	}
 
-	const embed = new EmbedBuilder()
-		.setTitle(title)
-		.addFields(fields);
+	const embed = new EmbedBuilder().setTitle(title).addFields(fields);
 
 	return embed;
 }
