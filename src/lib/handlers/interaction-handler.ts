@@ -4,7 +4,7 @@ import {
 	MessageFlags,
 	type Client,
 	type Interaction,
-} from 'discord.js';
+} from "discord.js";
 
 export async function handleCommandError(
 	error: unknown,
@@ -13,7 +13,7 @@ export async function handleCommandError(
 	const errorMessage =
 		error instanceof Error
 			? error.message
-			: 'Error message could not be found';
+			: "Error message could not be found";
 
 	console.error(error);
 
@@ -37,9 +37,12 @@ export async function handleCommandError(
 
 // Registration for index.ts
 function registerInteractionHandler(client: Client) {
-	client.on(Events.InteractionCreate, (interaction: Interaction) => {
-		void handleInteraction(client, interaction);
-	});
+	client.on(
+		Events.InteractionCreate,
+		(interaction: Interaction) => {
+			void handleInteraction(client, interaction);
+		},
+	);
 }
 
 async function handleInteraction(
@@ -66,7 +69,7 @@ async function handleAutocomplete(
 		await command
 			.autocomplete(interaction)
 			.catch((error: unknown) => {
-				console.error('Autocomplete Error:', error);
+				console.error("Autocomplete Error:", error);
 			});
 	}
 }
@@ -81,14 +84,14 @@ async function handleSlashCommand(
 		await interaction
 			.reply({
 				content:
-					'This command is currently unavailable. The bot may be updating.',
+					"This command is currently unavailable. The bot may be updating.",
 				flags: [MessageFlags.Ephemeral],
 			})
 			.catch(() => undefined);
 		return;
 	}
 
-	if (interaction.commandName !== 'orbital') {
+	if (interaction.commandName !== "orbital") {
 		const logMessage = `[COMMAND]: ${interaction.user.tag} used /${interaction.commandName} in guild ${interaction.guildId}`;
 		console.log(logMessage);
 	}

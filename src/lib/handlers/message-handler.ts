@@ -1,6 +1,6 @@
-import {Events, type Message, type Client} from 'discord.js';
-import testMessageTrigger from '../triggers/message-trigger.js';
-import handleQuiz from '../triggers/quiz-handler.js';
+import { Events, type Message, type Client } from "discord.js";
+import testMessageTrigger from "../triggers/message-trigger.js";
+import handleQuiz from "../triggers/quiz-handler.js";
 
 async function executeDMHandlers(message: Message, client: Client) {
 	try {
@@ -8,7 +8,7 @@ async function executeDMHandlers(message: Message, client: Client) {
 		Handler for DMs to the bot
 		*/
 	} catch (error) {
-		console.error('DM trigger error', error);
+		console.error("DM trigger error", error);
 	}
 }
 
@@ -20,7 +20,7 @@ async function executePrimaryHandlers(
 		testMessageTrigger(message);
 		await handleQuiz(message);
 	} catch (error) {
-		console.error('Primary trigger error', error);
+		console.error("Primary trigger error", error);
 	}
 }
 
@@ -33,7 +33,7 @@ async function executeSecondaryHandlers(
 		Secondary message trigger function
 		*/
 	} catch (error) {
-		console.error('Secondary trigger error', error);
+		console.error("Secondary trigger error", error);
 	}
 }
 

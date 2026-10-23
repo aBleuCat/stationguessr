@@ -7,7 +7,8 @@ const shuffle = <T>(array: T[], startAt = 0): T[] => {
 	const shuffled = [...array];
 	const n = shuffled.length;
 
-	const startIndex = startAt < 0 ? Math.max(0, n + startAt) : startAt;
+	const startIndex =
+		startAt < 0 ? Math.max(0, n + startAt) : startAt;
 
 	for (let i = startIndex; i < n; i++) {
 		const j = Math.floor(Math.random() * (i + 1));

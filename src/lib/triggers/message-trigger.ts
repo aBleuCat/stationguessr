@@ -1,7 +1,7 @@
-import type {Message} from 'discord.js';
-import config from '../config.js';
-import queueMessage from '../helpers/queue-message.js';
-import {isGuildTextBasedChannel} from '../../type-utils.js';
+import type { Message } from "discord.js";
+import config from "../config.js";
+import queueMessage from "../helpers/queue-message.js";
+import { isGuildTextBasedChannel } from "../../type-utils.js";
 
 const triggerMap = new Map<string, string>();
 
@@ -21,7 +21,7 @@ function didNewTrigger(string: string): boolean {
 }
 
 function testMessageTrigger(message: Message) {
-	const {content, channel, author} = message;
+	const { content, channel, author } = message;
 	if (config.ADMINS.has(author.id)) {
 		const didNewTrig = didNewTrigger(content);
 		if (didNewTrig) return;
@@ -32,7 +32,7 @@ function testMessageTrigger(message: Message) {
 	if (triggerMap.has(content)) {
 		queueMessage({
 			channel,
-			content: triggerMap.get(content) ?? 'smth bad happened',
+			content: triggerMap.get(content) ?? "smth bad happened",
 		}).catch((error: unknown) => {
 			console.error(error);
 		});

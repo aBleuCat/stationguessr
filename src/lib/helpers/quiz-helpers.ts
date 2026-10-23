@@ -1,13 +1,17 @@
-import {setTimeout as sleep} from 'node:timers/promises';
-import {EmbedBuilder, type GuildTextBasedChannel} from 'discord.js';
-import {Temporal} from '@js-temporal/polyfill';
-import config from '../config.js';
-import type {PoolQuestion, PreQuiz, ActiveQuiz} from '../../types.js';
-import pools from '../../data/quiz-pools.js';
-import {randItem} from './random-helpers.js';
-import queueMessage from './queue-message.js';
-import shuffle from './shuffle-helpers.js';
-import dictToEmbed from './embed-helpers.js';
+import { setTimeout as sleep } from "node:timers/promises";
+import { EmbedBuilder, type GuildTextBasedChannel } from "discord.js";
+import { Temporal } from "@js-temporal/polyfill";
+import config from "../config.js";
+import type {
+	PoolQuestion,
+	PreQuiz,
+	ActiveQuiz,
+} from "../../types.js";
+import pools from "../../data/quiz-pools.js";
+import { randItem } from "./random-helpers.js";
+import queueMessage from "./queue-message.js";
+import shuffle from "./shuffle-helpers.js";
+import dictToEmbed from "./embed-helpers.js";
 
 const websiteRegex =
 	/http:\/\/stationguessr\.bluescorner\.net\/images\/(?<path>.*)/iv;
@@ -36,7 +40,7 @@ const handleError = (
 	});
 };
 
-const {QUIZ_START_DELAY} = config;
+const { QUIZ_START_DELAY } = config;
 
 export const quizzes = new Map<string, ActiveQuiz>();
 
@@ -54,8 +58,8 @@ function activateAnsWindow(
 		);
 	}
 
-	const {rounds} = quiz;
-	if (typeof rounds !== 'number') {
+	const { rounds } = quiz;
+	if (typeof rounds !== "number") {
 		throw new TypeError(
 			`No numerical round value found for quiz ${channel.id} in channel ${channel.name}. The quiz likely does not exist`,
 		);
@@ -68,7 +72,7 @@ function activateAnsWindow(
 
 	quiz.timer = setTimeout(() => {
 		expireAnsWindow(channel, rounds).catch((error: unknown) => {
-			handleError(error, channel, 'expiring the answer window');
+			handleError(error, channel, "expiring the answer window");
 		});
 	}, ansWindow * 1000);
 }
@@ -91,13 +95,13 @@ export async function expireAnsWindow(
 	// Closed check is to prevent the expiration if someone guessed correctly a few seconds prior and the quiz hasnt progressed yet
 	// rounds check is to prevent the expiration if the round already ended and another one started
 	if (
-		quiz.currentQuestion.status === 'closed' ||
+		quiz.currentQuestion.status === "closed" ||
 		expectedRounds !== quiz.rounds
 	) {
 		return;
 	}
 
-	quiz.currentQuestion.status = 'closed';
+	quiz.currentQuestion.status = "closed";
 
 	let description = `Nobody answered in ${quiz.ansWindow}s! The answer to "${quiz.currentQuestion.question}" was "${quiz.currentQuestion.answerTxt}"`;
 	if (quiz.rounds > 0 && quiz.remainingPool.length > 0) {
@@ -108,22 +112,22 @@ export async function expireAnsWindow(
 		);
 		description += `\n\nNext question <t:${unixTimestamp}:R>`;
 	} else {
-		description += '\n\n-# That was the last question.';
+		description += "\n\n-# That was the last question.";
 	}
 
 	const flavorTextOptions = [
-		'You guys suck',
+		"You guys suck",
 		"I've seen elderly type faster than you guys",
-		'Hop off the game bro',
-		'git gud',
+		"Hop off the game bro",
+		"git gud",
 		"My grandpa types faster than you and he's dead",
 	];
 	const embed = new EmbedBuilder()
-		.setTitle('Nobody answered in time!')
+		.setTitle("Nobody answered in time!")
 		.setDescription(description)
-		.setColor('#f38ba8')
+		.setColor("#f38ba8")
 		.setFooter({
-			text: randItem(flavorTextOptions) ?? 'git gud',
+			text: randItem(flavorTextOptions) ?? "git gud",
 		});
 	await queueMessage({
 		channel,
@@ -133,7 +137,7 @@ export async function expireAnsWindow(
 
 	await sleep(quiz.delay * 1000);
 	progressQuiz(channel).catch((error: unknown) => {
-		handleError(error, channel, 'progressing the quiz');
+		handleError(error, channel, "progressing the quiz");
 	});
 }
 
@@ -153,11 +157,11 @@ function endQuiz(channel: GuildTextBasedChannel) {
 		]),
 	);
 	const embed: EmbedBuilder = dictToEmbed(
-		'Scores',
+		"Scores",
 		scores,
-		'leaderboard',
+		"leaderboard",
 		([, a], [, b]) => b - a,
-	).setColor('#94e2d5');
+	).setColor("#94e2d5");
 
 	queueMessage({
 		channel,
@@ -165,7 +169,7 @@ function endQuiz(channel: GuildTextBasedChannel) {
 		embeds: [embed],
 		priority: 3,
 	}).catch((error: unknown) => {
-		handleError(error, channel, 'sending quiz results');
+		handleError(error, channel, "sending quiz results");
 	});
 	quizzes.delete(channel.id);
 }
@@ -187,7 +191,7 @@ export async function progressQuiz(channel: GuildTextBasedChannel) {
 		try {
 			endQuiz(channel);
 		} catch (error) {
-			handleError(error, channel, 'ending the quiz');
+			handleError(error, channel, "ending the quiz");
 		}
 
 		return;
@@ -196,39 +200,43 @@ export async function progressQuiz(channel: GuildTextBasedChannel) {
 	if (quiz.remainingPool.length === 0) {
 		await queueMessage({
 			channel,
-			content: 'There are no more questions remaining',
+			content: "There are no more questions remaining",
 			priority: 3,
 		});
 		try {
 			endQuiz(channel);
 		} catch (error) {
-			handleError(error, channel, 'ending the quiz');
+			handleError(error, channel, "ending the quiz");
 		}
 
 		return;
 	}
 
 	let question: PoolQuestion | undefined;
-	if (quiz.repeat === 'all') {
+	if (quiz.repeat === "all") {
 		question = {
 			...quiz.remainingPool[
 				Math.floor(Math.random() * quiz.remainingPool.length)
 			]!,
 		};
-	} else if (quiz.repeat === 'questions') {
+	} else if (quiz.repeat === "questions") {
 		question = quiz.remainingPool.pop();
 		// Flatten images into different questions and pick one to display, shuffle the others across the deck for doing later
-		if (Array.isArray(question?.image) && question.image.length > 0) {
+		if (
+			Array.isArray(question?.image) &&
+			question.image.length > 0
+		) {
 			const chosenImg: string =
 				question.image[
 					Math.floor(Math.random() * question.image.length)
-				] ?? 'Image failed to be found, somehow';
+				] ?? "Image failed to be found, somehow";
 			for (const imageItem of question.image) {
 				if (chosenImg === imageItem) {
 					continue;
 				}
 
-				const {image: _, ...questionWithoutImages} = question;
+				const { image: _, ...questionWithoutImages } =
+					question;
 				quiz.remainingPool.push({
 					...questionWithoutImages,
 					image: imageItem,
@@ -252,7 +260,7 @@ export async function progressQuiz(channel: GuildTextBasedChannel) {
 		);
 	}
 
-	quiz.currentQuestion = {...question, status: 'open'};
+	quiz.currentQuestion = { ...question, status: "open" };
 	quiz.rounds--;
 	const cQ = quiz.currentQuestion;
 	const unixTimestamp = Math.round(
@@ -267,9 +275,9 @@ export async function progressQuiz(channel: GuildTextBasedChannel) {
 		.setDescription(
 			`${cQ.question}\n\nYou must answer <t:${unixTimestamp}:R>`,
 		)
-		.setColor('#fab387');
+		.setColor("#fab387");
 
-	if (typeof cQ.image === 'string') {
+	if (typeof cQ.image === "string") {
 		embed.setImage(cQ.image);
 	} else if (cQ.image) {
 		embed.setImage(
@@ -340,7 +348,7 @@ export async function newQuiz(
 	let pool: PoolQuestion[] = [];
 	let normalizers: Array<(value: string) => string> = [];
 
-	if (typeof quiz.pool === 'string') {
+	if (typeof quiz.pool === "string") {
 		const selectedPool = pools[quiz.pool];
 		if (selectedPool) {
 			pool = selectedPool.pool;
@@ -365,16 +373,16 @@ export async function newQuiz(
 	const uniqueNormalizers = deduplicateNormalizers(normalizers);
 
 	const finalPool =
-		quiz.repeat === 'all' ? pool : shuffle(pool, quiz.rounds);
+		quiz.repeat === "all" ? pool : shuffle(pool, quiz.rounds);
 	const leQuiz: ActiveQuiz = {
 		...quiz,
 		totalRounds: quiz.rounds,
 		remainingPool: finalPool,
 		currentQuestion: {
-			question: '',
+			question: "",
 			answer: / /v,
-			answerTxt: '',
-			status: 'idle',
+			answerTxt: "",
+			status: "idle",
 		},
 		scores: {},
 		normalize:
@@ -389,27 +397,27 @@ export async function newQuiz(
 		.setTitle(quiz.title)
 		.addFields(
 			{
-				name: `Pool${Array.isArray(quiz.pool) ? 's' : ''}`,
+				name: `Pool${Array.isArray(quiz.pool) ? "s" : ""}`,
 				value: Array.isArray(quiz.pool)
-					? quiz.pool.join(', ')
-					: typeof quiz.pool === 'string'
+					? quiz.pool.join(", ")
+					: typeof quiz.pool === "string"
 						? quiz.pool
-						: 'Custom',
+						: "Custom",
 			},
-			{name: 'Rounds', value: quiz.rounds.toString()},
+			{ name: "Rounds", value: quiz.rounds.toString() },
 			{
-				name: 'Delay Between Questions',
-				value: quiz.delay.toString() + ' seconds',
+				name: "Delay Between Questions",
+				value: quiz.delay.toString() + " seconds",
 			},
 			{
-				name: 'Answer Window',
-				value: quiz.ansWindow.toString() + ' seconds',
+				name: "Answer Window",
+				value: quiz.ansWindow.toString() + " seconds",
 			},
-			{name: 'Repeat Type', value: quiz.repeat},
-			{name: 'Prize*', value: quiz.prize ?? 'None'},
+			{ name: "Repeat Type", value: quiz.repeat },
+			{ name: "Prize*", value: quiz.prize ?? "None" },
 		)
-		.setFooter({text: '*Prize handling does not exist yet'})
-		.setColor('#89b4fa');
+		.setFooter({ text: "*Prize handling does not exist yet" })
+		.setColor("#89b4fa");
 	await queueMessage({
 		channel,
 		content: `${quiz.title} is starting! woah`,
@@ -426,7 +434,7 @@ export async function newQuiz(
 		}
 
 		progressQuiz(channel).catch((error: unknown) => {
-			handleError(error, channel, 'progressing the quiz');
+			handleError(error, channel, "progressing the quiz");
 		});
 	})();
 

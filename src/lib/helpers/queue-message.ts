@@ -5,8 +5,8 @@ import type {
 	EmbedBuilder,
 	APIEmbed,
 	MessageMentionOptions,
-} from 'discord.js';
-import config from '../config.js';
+} from "discord.js";
+import config from "../config.js";
 
 type ReplyInfo = {
 	mention: boolean;
@@ -141,7 +141,8 @@ async function processChannelQueue(channelId: string): Promise<void> {
 
 			// Clean up idle channel state to prevent memory leaks
 			if (channelQueues.size > 100) {
-				const staleThreshold = Date.now() - CHANNEL_LIMIT_MS * 2;
+				const staleThreshold =
+					Date.now() - CHANNEL_LIMIT_MS * 2;
 				for (const [id, s] of channelQueues) {
 					if (
 						!s.isProcessing &&
@@ -168,10 +169,10 @@ async function processChannelQueue(channelId: string): Promise<void> {
 
 		try {
 			const sent = await item.channel.send({
-				...(item.content && {content: item.content}),
-				...(item.embeds && {embeds: item.embeds}),
+				...(item.content && { content: item.content }),
+				...(item.embeds && { embeds: item.embeds }),
 				...(item.reply?.mention && {
-					reply: {messageReference: item.reply.message},
+					reply: { messageReference: item.reply.message },
 				}),
 				...(item.allowedMentions && {
 					allowedMentions: item.allowedMentions,
@@ -185,9 +186,9 @@ async function processChannelQueue(channelId: string): Promise<void> {
 			item.resolve(sent);
 		} catch (error: unknown) {
 			if (error instanceof Error) {
-				console.error('Queue send error:', error.message);
+				console.error("Queue send error:", error.message);
 			} else {
-				console.error('Queue send error:', error);
+				console.error("Queue send error:", error);
 			}
 
 			item.reject(error);

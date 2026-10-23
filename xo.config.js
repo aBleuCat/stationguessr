@@ -17,6 +17,28 @@ export default [
 	{
 		rules: {
 			"curly": ["error", "multi-line"],
+			"prettier/prettier": [
+				"error",
+				{
+					singleQuote: false,
+					bracketSpacing: true,
+					printWidth: 70,
+					semi: true,
+					trailingComma: "all",
+					useTabs: true,
+					tabWidth: 4,
+					endOfLine: "auto",
+				},
+			],
+			"@stylistic/quotes": [
+				"error",
+				"double",
+				{
+					allowTemplateLiterals: "never",
+					avoidEscape: true,
+					ignoreStringLiterals: false,
+				},
+			],
 			"@typescript-eslint/naming-convention": [
 				"error",
 				{
