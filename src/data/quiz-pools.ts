@@ -1,4 +1,50 @@
+import wordsToNumbers from "@codecompose/words-to-numbers";
 import type { Pool } from "../types.js";
+
+const stationNormalizer = (string: string): string => {
+	string = string
+		// Rule 0: We cannot spell
+		.replaceAll(/\bfourty\b/giv, 'forty')
+		.replaceAll(/'|\./gv, '')
+		// Rule 3: Dashes, ampersands, the word “and,” and slashes are interchangeable wherever applicable.
+		.replaceAll(/\s?[&\/]\s?/gv, ' ')
+		.replaceAll(/(?:\s|-)and(?:\s|-)/giv, ' ')
+		// Rule 4: Abbreviations for street, road, avenue, road, parkway, boulevard, drive, lane, place,
+		// turnpike, square, center, heights, expressway, saint are acceptable.
+		.replaceAll(/\bstr?\b(?!\s+george)/giv, 'Street')
+		.replaceAll(/\bsts\b/giv, 'Streets')
+		.replaceAll(/\brd\b/giv, 'Road')
+		.replaceAll(/\bave?\b/giv, 'Avenue')
+		.replaceAll(/\bp(?:kw?|rkw)y\b/giv, 'Parkway')
+		.replaceAll(/\bbl?vd\b/giv, 'Boulevard')
+		.replaceAll(/\bdr\b/giv, 'Drive')
+		.replaceAll(/\bln\b/giv, 'Lane')
+		.replaceAll(/\bpl\b/giv, 'Place')
+		.replaceAll(/\btr?pke?\b/giv, 'Turnpike')
+		.replaceAll(/\bsq\b/giv, 'Square')
+		.replaceAll(/\bhts\b/giv, 'Heights')
+		.replaceAll(/\bst\b/giv, 'Saint')
+		// Also Rule 12: Any common non-American spellings (like centre instead of center) is acceptable.
+		.replaceAll(/\b(?:ctr|centre)\b/giv, 'Center')
+		.replaceAll(/\bexpw?y\b/giv, 'Expressway');
+	// Rule 5: An ordinal word is acceptable in the place of an ordinal numeral and vice versa.
+	string = String(wordsToNumbers(string) ?? string);
+	string = string
+		// Rule 6: Suffixes like “th” after a number are optional.
+		.replaceAll(/(?<=\d)(?:th|st|nd|rd)\b/giv, '')
+		// Rule 7: North, South, East, and West can be replaced by N, S, E, and W respectively, followed by optional periods.
+		.replaceAll(/\bn\b/giv, 'North')
+		.replaceAll(/\be\b/giv, 'East')
+		.replaceAll(/\bs\b/giv, 'South')
+		.replaceAll(/\bw\b/giv, 'West')
+		// Rule 8: The word station and terminal, and any other generic noun that is applicable to dozens of stations,
+		// is optional wherever applicable.
+		.replaceAll(/\b(?:station|terminal)\s?/giv, '')
+		.replaceAll(/\b(?:the|a)\s+/giv, '')
+		.replaceAll(/\s+/gv, ' ');
+
+	return string.trim();
+};
 
 const pools: Record<string, Pool> = {
 	/** **Placeholder** - The pool "mathTest" is a placeholder for testing */

@@ -34,6 +34,7 @@
         "xo": "^5.0.1"
     },
     "dependencies": {
+        "@codecompose/words-to-numbers": "^2.0.1",
         "@js-temporal/polyfill": "^0.5.1",
         "discord.js": "^14.27.0",
         "dotenv": "^18.0.8"

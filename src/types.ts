@@ -58,11 +58,16 @@ export type PreQuiz = {
 	*/
 	delay: number;
 	/**
+	 Input the name of a pool or pools, or the actual Pool object itself.
 	 If you wish to pull from multiple pools, put the pools in an array.
 	 @example pool: "pool1"
 	 @example pool: ["pool1", "pool2"]
+	 @example
+	 pool: {
+	 	pool: [question1, question2],
+	 }
 	 */
-	pool: string | string[];
+	pool: string | string[] | Pool;
 	rounds: number;
 	/**
 	In seconds, not milliseconds

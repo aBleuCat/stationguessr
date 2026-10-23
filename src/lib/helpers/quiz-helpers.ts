@@ -282,50 +282,7 @@ export async function progressQuiz(channel: GuildTextBasedChannel) {
 	activateAnsWindow(channel, quiz.ansWindow);
 }
 
-export async function newQuiz(
-	channel: GuildTextBasedChannel,
-	quiz: PreQuiz,
-	shouldAutoprogress?: boolean,
-	willForce?: boolean,
-) {
-	if (willForce === false && quizzes.has(channel.id)) {return `Error: A quiz is already active in channel ${channel.name} with id ${channel.id}`; }
-
-	let pool: PoolQuestion[] = [];
-	const normalizers: Array<(value: string) => string> = [];
-
-	if (typeof quiz.pool === "string") {
-		const selectedPool = pools[quiz.pool];
-		if (selectedPool) {
-			pool = selectedPool.pool;
-			const itemNormalizer = selectedPool.metadata?.normalizer;
-			if (itemNormalizer) {
-				normalizers.push(itemNormalizer);
-			}
-		} else {
-			const error = `Error: No pool named ${quiz.pool} (Tried to create quiz ${channel.id} in channel ${channel.name})`;
-			throw new Error(error);
-		}
-	} else {
-		for (const item of quiz.pool) {
-			// eslint-disable-next-line unicorn/no-computed-property-existence-check
-			if (pools[item]) {
-				pool.push(...pools[item].pool);
-				const itemNormalizer =
-					pools[item]?.metadata?.normalizer;
-				if (itemNormalizer) {
-					normalizers.push(itemNormalizer);
-				}
-			} else {
-				const error = `Error: No pool named ${item} (Tried to create quiz ${channel.id} in channel ${channel.name})`;
-				throw new Error(error);
-			}
-		}
-	}
-	/* Deduplicate normalizer functions by comparing source code strings
-	This prevents the same normalizers from running multiple times 
-	when combining different question pools together.
-	*/
-
+function deduplicateNormalizers(normalizers: Array<(value: string) => string>) {
 	const seenCodes = new Set<string>();
 	const uniqueNormalizers = normalizers.filter((fn) => {
 		const code = fn.toString();
@@ -336,6 +293,65 @@ export async function newQuiz(
 		seenCodes.add(code);
 		return true;
 	});
+
+	return uniqueNormalizers;
+}
+
+function mergePools(pool: string[], channel: GuildTextBasedChannel): [PoolQuestion[], Array<(value: string) => string>] {
+	const mergedPool: PoolQuestion[] = [];
+	const normalizers: Array<(value: string) => string> = [];
+	for (const item of pool) {
+		// eslint-disable-next-line unicorn/no-computed-property-existence-check
+		if (pools[item]) {
+			mergedPool.push(...pools[item].pool);
+			const itemNormalizer =
+				pools[item]?.metadata?.normalizer;
+			if (itemNormalizer) {
+				normalizers.push(itemNormalizer);
+			}
+		} else {
+			const error = `Error: No pool named ${item} (Tried to create quiz ${channel.id} in channel ${channel.name})`;
+			throw new Error(error);
+		}
+	}
+
+	return [mergedPool, normalizers];
+}
+
+export async function newQuiz(
+	channel: GuildTextBasedChannel,
+	quiz: PreQuiz,
+	shouldAutoprogress?: boolean,
+	willForce?: boolean,
+) {
+	if (willForce === false && quizzes.has(channel.id)) {return `Error: A quiz is already active in channel ${channel.name} with id ${channel.id}`; }
+
+	let pool: PoolQuestion[] = [];
+	let normalizers: Array<(value: string) => string> = [];
+
+	if (typeof quiz.pool === "string") {
+		const selectedPool = pools[quiz.pool];
+		if (selectedPool) {
+			pool = selectedPool.pool;
+			const itemNormalizer = selectedPool.metadata?.normalizer;
+			if (itemNormalizer) normalizers.push(itemNormalizer);
+		} else {
+			const error = `Error: No pool named ${quiz.pool} (Tried to create quiz ${channel.id} in channel ${channel.name})`;
+			throw new Error(error);
+		}
+	} else if (Array.isArray(quiz.pool)) {
+		[pool, normalizers] = mergePools(quiz.pool, channel);
+	} else {
+		pool = quiz.pool.pool;
+		const itemNormalizer = quiz.pool.metadata?.normalizer;
+		if (itemNormalizer) normalizers.push(itemNormalizer);
+	}
+	/* Deduplicate normalizer functions by comparing source code strings
+	This prevents the same normalizers from running multiple times 
+	when combining different question pools together.
+	*/
+
+	const uniqueNormalizers = deduplicateNormalizers(normalizers);
 
 	const finalPool =
 		quiz.repeat === "all" ? pool : shuffle(pool, quiz.rounds);
@@ -365,7 +381,9 @@ export async function newQuiz(
 				name: `Pool${Array.isArray(quiz.pool) ? "s" : ""}`,
 				value: Array.isArray(quiz.pool)
 					? quiz.pool.join(", ")
-					: quiz.pool,
+					: typeof quiz.pool === "string"
+						? quiz.pool
+						: "Custom",
 			},
 			{ name: "Rounds", value: quiz.rounds.toString() },
 			{
