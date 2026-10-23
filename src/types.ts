@@ -117,6 +117,14 @@ export type Pool = {
 	pool: PoolQuestion[];
 };
 
+export type QuestionBank = Array<
+	Omit<PoolQuestion, "answer"> & {
+		answer: string;
+		tags: string[];
+		ridership: number;
+	}
+>;
+
 declare module "discord.js" {
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Client {

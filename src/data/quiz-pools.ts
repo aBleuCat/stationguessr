@@ -46,73 +46,6 @@ export const stationNormalizer = (string: string): string => {
 	return string.trim();
 };
 
-export const stationsQuestionBank: Array<
-	PoolQuestion & { tags: string[] }
-> = [
-	{
-		question: "0+0=",
-		answer: /^0$/v,
-		answerTxt: "0",
-		tags: ["test", "math", "addition", "small_number"],
-	},
-	{
-		question: "2+2=",
-		answer: /^4$/v,
-		answerTxt: "4",
-		tags: ["test", "math", "addition", "small_number"],
-	},
-	{
-		question: "8+8=",
-		answer: /^16$/v,
-		answerTxt: "16",
-		tags: ["test", "math", "addition", "small_number"],
-	},
-	{
-		question: "10,000+10,000=",
-		answer: /^20000$/v,
-		answerTxt: "20,000",
-		tags: ["test", "math", "addition", "medium_number"],
-	},
-	{
-		question: "1,000,000*10=",
-		answer: /^(?:10000000|ten-? ?million)$/iv,
-		answerTxt: "10,000,000",
-		tags: ["test", "math", "multiplication", "medium_number"],
-	},
-	{
-		question: "900000000000000*900000000000000",
-		answer: /^(?:810(?:000){9}|eight-? ?hundred-? ?ten-? ?octillion)$/iv,
-		answerTxt: "eight hundred ten octillion", // As per request from my younger brother
-		tags: ["test", "math", "multiplication", "big_number"],
-	},
-	{
-		question: "8.1*10.1=",
-		answer: /^81\.81$/v,
-		answerTxt: "81.81",
-		tags: ["test", "math", "multiplication", "decimals"],
-	},
-	{
-		question: "respond with test",
-		answer: /test/iv,
-		answerTxt: "test",
-		image: [
-			"https://cdn.discordapp.com/attachments/1068188325380374548/1516102329164763168/tier_newer.gif",
-			"https://cdn.discordapp.com/attachments/1282840454278156353/1519826942659133500/umayyadNOW.gif",
-		],
-		tags: ["test", "images"],
-	},
-	{
-		question: "respond with trial",
-		answer: /trial/iv,
-		answerTxt: "trial",
-		image: [
-			"https://cdn.discordapp.com/attachments/1358244650716106865/1503170758363320491/togif.gif",
-			"https://cdn.discordapp.com/attachments/1448818023921094679/1500295196506591385/attachment.gif",
-		],
-		tags: ["test", "images"],
-	},
-];
-
 const pools: Record<string, Pool> = {
 	/** **Placeholder** - The pool "mathTest" is a placeholder for testing */
 	mathTest: {
@@ -189,36 +122,5 @@ const pools: Record<string, Pool> = {
 		},
 	},
 };
-
-async function expandBranches(link: string): Promise<string[]> {
-	return [link]; // Placeholder
-}
-
-function expandPool(
-	pool: PoolQuestion[],
-	promises: Array<Promise<void>>,
-) {
-	for (const question of pool) {
-		if (typeof question.image === "string") {
-			promises.push(
-				expandBranches(question.image).then((expanded) => {
-					question.image = expanded;
-				}),
-			);
-		}
-	}
-}
-
-// On startup
-export async function doBranchShit() {
-	const promises: Array<Promise<void>> = [];
-	for (const { pool } of Object.values(pools)) {
-		expandPool(pool, promises);
-	}
-
-	expandPool(stationsQuestionBank, promises);
-
-	await Promise.all(promises);
-}
 
 export default pools;

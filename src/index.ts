@@ -25,7 +25,6 @@ import type { Command } from "./types.js";
 // Handlers
 import registerInteractionHandler from "./lib/handlers/interaction-handler.js";
 import registerMessageHandler from "./lib/handlers/message-handler.js";
-import { doBranchShit } from "./data/quiz-pools.js";
 // Tasks
 /*
 insert tasks here
@@ -294,9 +293,6 @@ client.on("interactionCreate", (interaction) => {
 // Register handlers and log in
 registerInteractionHandler(client);
 registerMessageHandler(client);
-
-// Miscellaneous stuff
-await doBranchShit();
 
 await client.login(envToken);
 

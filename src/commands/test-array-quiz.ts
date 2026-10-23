@@ -3,10 +3,8 @@ import {
 	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
-import {
-	stationNormalizer,
-	stationsQuestionBank,
-} from "../data/quiz-pools.js";
+import { stationNormalizer } from "../data/quiz-pools.js";
+import { stationsQuestionBank } from "../lib/helpers/load-question-bank-json.js";
 import type { Pool, PoolQuestion, PreQuiz } from "../types.js";
 import { isGuildTextBasedChannel } from "../type-utils.js";
 import { newQuiz } from "../lib/helpers/quiz-helpers.js";
@@ -44,8 +42,14 @@ function filtersToPool(tags: string[][], exclude: string[]): Pool {
 			return doesMatch;
 		})
 		.map((item) => {
-			const { tags: itemTags, ...poolFields } = item;
-			return poolFields;
+			const {
+				tags: itemTags,
+				ridership,
+				answer,
+				...poolFields
+			} = item;
+			const answerRegex = new RegExp(answer, "iv");
+			return { ...poolFields, answer: answerRegex };
 		});
 
 	return {
