@@ -8,9 +8,8 @@ import type {
 	ActiveQuiz,
 } from "../../types.js";
 import pools from "../../data/quiz-pools.js";
-import { randItem } from "./random-helpers.js";
+import { shuffle, randItem } from "./random-helpers.js";
 import queueMessage from "./queue-message.js";
-import shuffle from "./shuffle-helpers.js";
 import dictToEmbed from "./embed-helpers.js";
 
 const websiteRegex =

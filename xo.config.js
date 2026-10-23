@@ -17,6 +17,7 @@ export default [
 	{
 		rules: {
 			"curly": ["error", "multi-line"],
+			"@stylistic/no-mixed-operators": "off",
 			"prettier/prettier": [
 				"error",
 				{

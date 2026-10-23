@@ -4,10 +4,22 @@ import {
 	SlashCommandBuilder,
 } from "discord.js";
 import { stationNormalizer } from "../data/quiz-pools.js";
-import { stationsQuestionBank } from "../lib/helpers/load-question-bank-json.js";
-import type { Pool, PoolQuestion, PreQuiz } from "../types.js";
+import stationsQuestionBank from "../lib/helpers/load-question-bank-json.js";
+import type { Pool, PreQuiz } from "../types.js";
 import { isGuildTextBasedChannel } from "../type-utils.js";
 import { newQuiz } from "../lib/helpers/quiz-helpers.js";
+import { getWeightedSample } from "../lib/helpers/random-helpers.js";
+
+const difficultyWeight = {
+	easy: Math.log10,
+	medium: (ridership: number) => ridership,
+	hard: (ridership: number) => 1 / Math.sqrt(ridership),
+};
+
+const isDifficulty = (
+	difficulty: string,
+): difficulty is "easy" | "medium" | "hard" =>
+	new Set(["easy", "medium", "hard"]).has(difficulty);
 
 function arrayInArray<T>(subset: T[], superset: T[]) {
 	const supersetSet = new Set(superset);
@@ -26,8 +38,13 @@ function isRepeatType(
 	return repeatTypes.has(repeat);
 }
 
-function filtersToPool(tags: string[][], exclude: string[]): Pool {
-	const pool: PoolQuestion[] = stationsQuestionBank
+function filtersToPool(
+	tags: string[][],
+	exclude: string[],
+	difficulty: "easy" | "medium" | "hard",
+	length: number,
+): Pool {
+	const pool = stationsQuestionBank
 		.filter((item) => {
 			let doesMatch = false;
 			for (const option of tags) {
@@ -42,18 +59,19 @@ function filtersToPool(tags: string[][], exclude: string[]): Pool {
 			return doesMatch;
 		})
 		.map((item) => {
-			const {
-				tags: itemTags,
-				ridership,
-				answer,
-				...poolFields
-			} = item;
+			const { tags: itemTags, answer, ...poolFields } = item;
 			const answerRegex = new RegExp(answer, "iv");
 			return { ...poolFields, answer: answerRegex };
 		});
 
-	return {
+	const samplePool = getWeightedSample(
 		pool,
+		length,
+		({ ridership }) => difficultyWeight[difficulty](ridership),
+	);
+
+	return {
+		pool: samplePool,
 		metadata: {
 			normalizer: stationNormalizer,
 		},
@@ -89,6 +107,19 @@ const testQuizCommand = {
 			option
 				.setName("condition")
 				.setDescription("What type of questions to filter")
+				.setRequired(true),
+		)
+		.addStringOption((option) =>
+			option
+				.setName("difficulty")
+				.setDescription(
+					"How difficult should the questions be (based on ridership)",
+				)
+				.addChoices(
+					{ name: "Easy", value: "easy" },
+					{ name: "Medium", value: "medium" },
+					{ name: "Hard", value: "hard" },
+				)
 				.setRequired(true),
 		)
 		.addNumberOption((option) =>
@@ -143,6 +174,8 @@ const testQuizCommand = {
 
 		const title = interaction.options.getString("title");
 		const condition = interaction.options.getString("condition");
+		const difficulty =
+			interaction.options.getString("difficulty");
 		const repeat =
 			interaction.options.getString("repeat-type") ?? "none";
 		const rounds = interaction.options.getNumber("rounds") ?? 5;
@@ -153,7 +186,9 @@ const testQuizCommand = {
 			condition === null ||
 			repeat === null ||
 			rounds === null ||
-			ansWindow === null
+			ansWindow === null ||
+			difficulty === null ||
+			!isDifficulty(difficulty)
 		) {
 			return interaction.reply({
 				content: "Failed to get some of your inputs",
@@ -168,7 +203,11 @@ const testQuizCommand = {
 			});
 		}
 
-		const pool = filtersToPool(...stringToFilters(condition));
+		const pool = filtersToPool(
+			...stringToFilters(condition),
+			difficulty,
+			rounds,
+		);
 
 		const quiz: PreQuiz = {
 			title,
