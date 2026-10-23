@@ -43,10 +43,360 @@
 	},
 	{
 		"question": "8.1*10.1=",
-		"answer": "^81\\.81$",
+		"answer": "^8181$",
 		"answerTxt": "81.81",
 		"tags": ["test", "math", "multiplication", "decimals"],
 		"ridership": 25000
+	},
+	{
+		"question": "3+5=",
+		"answer": "^8$",
+		"answerTxt": "8",
+		"tags": ["test", "math", "addition", "small_number"],
+		"ridership": 500000
+	},
+	{
+		"question": "7+6=",
+		"answer": "^13$",
+		"answerTxt": "13",
+		"tags": ["test", "math", "addition", "small_number"],
+		"ridership": 500000
+	},
+	{
+		"question": "14+9=",
+		"answer": "^23$",
+		"answerTxt": "23",
+		"tags": ["test", "math", "addition", "small_number"],
+		"ridership": 400000
+	},
+	{
+		"question": "25+37=",
+		"answer": "^62$",
+		"answerTxt": "62",
+		"tags": ["test", "math", "addition", "small_number"],
+		"ridership": 300000
+	},
+	{
+		"question": "48+76=",
+		"answer": "^124$",
+		"answerTxt": "124",
+		"tags": ["test", "math", "addition", "medium_number"],
+		"ridership": 200000
+	},
+	{
+		"question": "125+275=",
+		"answer": "^400$",
+		"answerTxt": "400",
+		"tags": ["test", "math", "addition", "medium_number"],
+		"ridership": 150000
+	},
+	{
+		"question": "999+1001=",
+		"answer": "^2000$",
+		"answerTxt": "2,000",
+		"tags": ["test", "math", "addition", "medium_number"],
+		"ridership": 100000
+	},
+	{
+		"question": "3456+789=",
+		"answer": "^4245$",
+		"answerTxt": "4,245",
+		"tags": ["test", "math", "addition", "medium_number"],
+		"ridership": 50000
+	},
+	{
+		"question": "12000+88000=",
+		"answer": "^100000$",
+		"answerTxt": "100,000",
+		"tags": ["test", "math", "addition", "big_number"],
+		"ridership": 25000
+	},
+	{
+		"question": "99999+1=",
+		"answer": "^100000$",
+		"answerTxt": "100,000",
+		"tags": ["test", "math", "addition", "big_number"],
+		"ridership": 15000
+	},
+	{
+		"question": "9-4=",
+		"answer": "^5$",
+		"answerTxt": "5",
+		"tags": ["test", "math", "subtraction", "small_number"],
+		"ridership": 500000
+	},
+	{
+		"question": "15-8=",
+		"answer": "^7$",
+		"answerTxt": "7",
+		"tags": ["test", "math", "subtraction", "small_number"],
+		"ridership": 450000
+	},
+	{
+		"question": "32-17=",
+		"answer": "^15$",
+		"answerTxt": "15",
+		"tags": ["test", "math", "subtraction", "small_number"],
+		"ridership": 350000
+	},
+	{
+		"question": "100-46=",
+		"answer": "^54$",
+		"answerTxt": "54",
+		"tags": ["test", "math", "subtraction", "medium_number"],
+		"ridership": 250000
+	},
+	{
+		"question": "1000-375=",
+		"answer": "^625$",
+		"answerTxt": "625",
+		"tags": ["test", "math", "subtraction", "medium_number"],
+		"ridership": 150000
+	},
+	{
+		"question": "10000-1234=",
+		"answer": "^8766$",
+		"answerTxt": "8,766",
+		"tags": ["test", "math", "subtraction", "medium_number"],
+		"ridership": 75000
+	},
+	{
+		"question": "50000-27500=",
+		"answer": "^22500$",
+		"answerTxt": "22,500",
+		"tags": ["test", "math", "subtraction", "big_number"],
+		"ridership": 35000
+	},
+	{
+		"question": "123456-78901=",
+		"answer": "^44555$",
+		"answerTxt": "44,555",
+		"tags": ["test", "math", "subtraction", "big_number"],
+		"ridership": 20000
+	},
+	{
+		"question": "3*4=",
+		"answer": "^12$",
+		"answerTxt": "12",
+		"tags": ["test", "math", "multiplication", "small_number"],
+		"ridership": 500000
+	},
+	{
+		"question": "6*7=",
+		"answer": "^42$",
+		"answerTxt": "42",
+		"tags": ["test", "math", "multiplication", "small_number"],
+		"ridership": 450000
+	},
+	{
+		"question": "9*8=",
+		"answer": "^72$",
+		"answerTxt": "72",
+		"tags": ["test", "math", "multiplication", "small_number"],
+		"ridership": 350000
+	},
+	{
+		"question": "12*12=",
+		"answer": "^144$",
+		"answerTxt": "144",
+		"tags": ["test", "math", "multiplication", "medium_number"],
+		"ridership": 250000
+	},
+	{
+		"question": "15*20=",
+		"answer": "^300$",
+		"answerTxt": "300",
+		"tags": ["test", "math", "multiplication", "medium_number"],
+		"ridership": 200000
+	},
+	{
+		"question": "24*25=",
+		"answer": "^600$",
+		"answerTxt": "600",
+		"tags": ["test", "math", "multiplication", "medium_number"],
+		"ridership": 125000
+	},
+	{
+		"question": "125*8=",
+		"answer": "^1000$",
+		"answerTxt": "1,000",
+		"tags": ["test", "math", "multiplication", "medium_number"],
+		"ridership": 80000
+	},
+	{
+		"question": "36*45=",
+		"answer": "^1620$",
+		"answerTxt": "1,620",
+		"tags": ["test", "math", "multiplication", "medium_number"],
+		"ridership": 50000
+	},
+	{
+		"question": "123*12=",
+		"answer": "^1476$",
+		"answerTxt": "1,476",
+		"tags": ["test", "math", "multiplication", "medium_number"],
+		"ridership": 30000
+	},
+	{
+		"question": "256*64=",
+		"answer": "^16384$",
+		"answerTxt": "16,384",
+		"tags": ["test", "math", "multiplication", "big_number"],
+		"ridership": 15000
+	},
+	{
+		"question": "20/4=",
+		"answer": "^5$",
+		"answerTxt": "5",
+		"tags": ["test", "math", "division", "small_number"],
+		"ridership": 500000
+	},
+	{
+		"question": "56/7=",
+		"answer": "^8$",
+		"answerTxt": "8",
+		"tags": ["test", "math", "division", "small_number"],
+		"ridership": 450000
+	},
+	{
+		"question": "144/12=",
+		"answer": "^12$",
+		"answerTxt": "12",
+		"tags": ["test", "math", "division", "small_number"],
+		"ridership": 350000
+	},
+	{
+		"question": "225/15=",
+		"answer": "^15$",
+		"answerTxt": "15",
+		"tags": ["test", "math", "division", "small_number"],
+		"ridership": 250000
+	},
+	{
+		"question": "1000/25=",
+		"answer": "^40$",
+		"answerTxt": "40",
+		"tags": ["test", "math", "division", "medium_number"],
+		"ridership": 175000
+	},
+	{
+		"question": "864/18=",
+		"answer": "^48$",
+		"answerTxt": "48",
+		"tags": ["test", "math", "division", "medium_number"],
+		"ridership": 100000
+	},
+	{
+		"question": "4096/64=",
+		"answer": "^64$",
+		"answerTxt": "64",
+		"tags": ["test", "math", "division", "medium_number"],
+		"ridership": 50000
+	},
+	{
+		"question": "12348/12=",
+		"answer": "^1029$",
+		"answerTxt": "1,029",
+		"tags": ["test", "math", "division", "medium_number"],
+		"ridership": 25000
+	},
+	{
+		"question": "1.5+2.5=",
+		"answer": "^4$",
+		"answerTxt": "4",
+		"tags": ["test", "math", "addition", "decimals"],
+		"ridership": 200000
+	},
+	{
+		"question": "7.2-3.8=",
+		"answer": "^34$",
+		"answerTxt": "3.4",
+		"tags": ["test", "math", "subtraction", "decimals"],
+		"ridership": 100000
+	},
+	{
+		"question": "2.4*3=",
+		"answer": "^72$",
+		"answerTxt": "7.2",
+		"tags": ["test", "math", "multiplication", "decimals"],
+		"ridership": 75000
+	},
+	{
+		"question": "12.6/3=",
+		"answer": "^42$",
+		"answerTxt": "4.2",
+		"tags": ["test", "math", "division", "decimals"],
+		"ridership": 50000
+	},
+	{
+		"question": "2^5=",
+		"answer": "^32$",
+		"answerTxt": "32",
+		"tags": ["test", "math", "exponents", "small_number"],
+		"ridership": 200000
+	},
+	{
+		"question": "3^4=",
+		"answer": "^81$",
+		"answerTxt": "81",
+		"tags": ["test", "math", "exponents", "medium_number"],
+		"ridership": 100000
+	},
+	{
+		"question": "sqrt(144)=",
+		"answer": "^12$",
+		"answerTxt": "12",
+		"tags": ["test", "math", "square_roots", "small_number"],
+		"ridership": 175000
+	},
+	{
+		"question": "sqrt(625)=",
+		"answer": "^25$",
+		"answerTxt": "25",
+		"tags": ["test", "math", "square_roots", "small_number"],
+		"ridership": 100000
+	},
+	{
+		"question": "10^3=",
+		"answer": "^1000$",
+		"answerTxt": "1,000",
+		"tags": ["test", "math", "exponents", "medium_number"],
+		"ridership": 75000
+	},
+	{
+		"question": "2^10=",
+		"answer": "^1024$",
+		"answerTxt": "1,024",
+		"tags": ["test", "math", "exponents", "medium_number"],
+		"ridership": 40000
+	},
+	{
+		"question": "10% of 80=",
+		"answer": "^8$",
+		"answerTxt": "8",
+		"tags": ["test", "math", "percentages", "small_number"],
+		"ridership": 175000
+	},
+	{
+		"question": "25% of 200=",
+		"answer": "^50$",
+		"answerTxt": "50",
+		"tags": ["test", "math", "percentages", "small_number"],
+		"ridership": 125000
+	},
+	{
+		"question": "15% of 60=",
+		"answer": "^9$",
+		"answerTxt": "9",
+		"tags": ["test", "math", "percentages", "small_number"],
+		"ridership": 75000
+	},
+	{
+		"question": "12% of 250=",
+		"answer": "^30$",
+		"answerTxt": "30",
+		"tags": ["test", "math", "percentages", "small_number"],
+		"ridership": 40000
 	},
 	{
 		"question": "respond with test",
