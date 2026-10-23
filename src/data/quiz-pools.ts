@@ -119,4 +119,26 @@ const pools: Record<string, Pool> = {
 	},
 };
 
+async function expandBranches(link: string): Promise<string[]> {
+	return [link]; // Placeholder
+}
+
+// On startup
+export async function doBranchShit() {
+	const promises: Array<Promise<void>> = [];
+	for (const { pool } of Object.values(pools)) {
+		for (const question of pool) {
+			if (typeof question.image === "string") {
+                promises.push(
+                    expandBranches(question.image).then((expanded) => {
+                        question.image = expanded;
+                    })
+                );
+            }
+		}
+	}
+
+	await Promise.all(promises);
+}
+
 export default pools;

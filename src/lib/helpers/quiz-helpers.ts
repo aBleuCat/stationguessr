@@ -13,6 +13,8 @@ import queueMessage from "./queue-message.js";
 import shuffle from "./shuffle-helpers.js";
 import dictToEmbed from "./embed-helpers.js";
 
+const websiteRegex = /http:\/\/stationguessr\.bluescorner\.net\/images\/(?<path>.*)/iv;
+
 /**
  Handle errors
  @param error The error thrown
