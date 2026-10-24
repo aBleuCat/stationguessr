@@ -9,6 +9,8 @@ import type {
 	AutocompleteInteraction,
 	SlashCommandSubcommandsOnlyBuilder,
 	Collection,
+	APIInteractionDataResolvedChannelBase,
+	ChannelType,
 } from "discord.js";
 import type { Temporal } from "@js-temporal/polyfill";
 

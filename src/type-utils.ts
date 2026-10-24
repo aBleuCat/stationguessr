@@ -6,6 +6,16 @@ import {
 } from "discord.js";
 import type { AnyChannel, QuestionBank } from "./types.js";
 
+export function isAnyChannel(
+	channel: unknown,
+): channel is AnyChannel {
+	return (
+		channel !== null &&
+		typeof channel === "object" &&
+		"isTextBased" in channel
+	);
+}
+
 export function isGuildTextBasedChannel(
 	channel: AnyChannel,
 ): channel is GuildTextBasedChannel {

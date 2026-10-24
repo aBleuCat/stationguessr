@@ -141,7 +141,7 @@ export async function expireAnsWindow(
 	});
 }
 
-function endQuiz(channel: GuildTextBasedChannel) {
+export function endQuiz(channel: GuildTextBasedChannel) {
 	const quiz = quizzes.get(channel.id);
 	if (!quiz) {
 		throw new Error(
