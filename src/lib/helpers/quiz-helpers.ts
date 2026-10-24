@@ -11,6 +11,7 @@ import pools from "../../data/quiz-pools.js";
 import { shuffle, randItem } from "./random-helpers.js";
 import queueMessage from "./queue-message.js";
 import dictToEmbed from "./embed-helpers.js";
+import { capitalizeWord } from "./string-helpers.js";
 
 const websiteRegex =
 	/http:\/\/stationguessr\.bluescorner\.net\/images\/(?<path>.*)/iv;
@@ -407,7 +408,10 @@ export async function newQuiz(
 				name: "Answer Window",
 				value: quiz.ansWindow.toString() + " seconds",
 			},
-			{ name: "Repeat Type", value: quiz.repeat },
+			{
+				name: "Repeat Type",
+				value: capitalizeWord(quiz.repeat),
+			},
 		)
 		.setColor("#89b4fa");
 	if (otherInfo?.data.fields) {

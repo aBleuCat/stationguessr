@@ -9,6 +9,7 @@ import type { Pool, PreQuiz } from "../types.js";
 import { isGuildTextBasedChannel } from "../type-utils.js";
 import { newQuiz } from "../lib/helpers/quiz-helpers.js";
 import { getWeightedSample } from "../lib/helpers/random-helpers.js";
+import { capitalizeWord } from "../lib/helpers/string-helpers.js";
 
 const difficultyWeight = {
 	easy: Math.log10,
@@ -218,7 +219,7 @@ const testQuizCommand = {
 			repeat,
 			otherInfo: {
 				Condition: condition,
-				Difficulty: difficulty,
+				Difficulty: capitalizeWord(difficulty),
 			},
 		};
 		const result = await newQuiz(channel, quiz);
