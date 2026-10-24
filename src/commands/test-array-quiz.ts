@@ -129,7 +129,8 @@ const testQuizCommand = {
 				.setDescription(
 					"The number of rounds the quiz should last",
 				)
-				.setRequired(false),
+				.setRequired(false)
+				.setMinValue(1),
 		)
 		.addNumberOption((option) =>
 			option
@@ -137,7 +138,8 @@ const testQuizCommand = {
 				.setDescription(
 					"The amount of time available to answer",
 				)
-				.setRequired(false),
+				.setRequired(false)
+				.setMinValue(0.01),
 		)
 		.addStringOption((option) =>
 			option
