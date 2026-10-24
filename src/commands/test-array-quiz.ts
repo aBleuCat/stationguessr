@@ -216,6 +216,10 @@ const testQuizCommand = {
 			rounds,
 			ansWindow,
 			repeat,
+			otherInfo: {
+				Condition: condition,
+				Difficulty: difficulty,
+			},
 		};
 		const result = await newQuiz(channel, quiz);
 		return interaction.reply({

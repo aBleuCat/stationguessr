@@ -392,6 +392,9 @@ export async function newQuiz(
 					: uniqueNormalizers,
 	};
 	quizzes.set(channel.id, leQuiz);
+	const otherInfo = quiz.otherInfo
+		? dictToEmbed("Placeholder", quiz.otherInfo)
+		: undefined;
 	const embed = new EmbedBuilder()
 		.setTitle(quiz.title)
 		.addFields(
@@ -417,6 +420,10 @@ export async function newQuiz(
 		)
 		.setFooter({ text: "*Prize handling does not exist yet" })
 		.setColor("#89b4fa");
+	if (otherInfo?.data.fields) {
+		embed.addFields(otherInfo.data.fields);
+	}
+
 	await queueMessage({
 		channel,
 		content: `${quiz.title} is starting! woah`,

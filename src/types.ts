@@ -78,10 +78,14 @@ export type PreQuiz = {
 	*/
 	prize?: string;
 	/**
-	 Questions** means that questions can repeat but the same image cannot. E.g., you can get times square twice but not same image of it
-	 All** means that both images and questions can repeat
+	 `questions` means that questions can repeat but the same image cannot. E.g., you can get times square twice but not same image of it.
+	 `all` means that both images and questions can repeat
 	 */
 	repeat: "none" | "questions" | "all";
+	/**
+	Other info to be displayed in the quiz starting embed
+	*/
+	otherInfo?: Record<string, string>;
 };
 /**
  Represents a quiz actively managed by quiz handlers and in use for discord

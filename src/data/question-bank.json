@@ -419,5 +419,13 @@
 		],
 		"tags": ["test", "images"],
 		"ridership": 200000
+	},
+	{
+		"question": "respond with guessr",
+		"answer": "guessr",
+		"answerTxt": "guessr",
+		"image": "http://fileshare.bluescorner.net/shared-files/Untitled.png",
+		"tags": ["test", "images", "bluescorner"],
+		"ridership": 150000
 	}
 ]
