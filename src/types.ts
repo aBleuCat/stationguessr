@@ -109,7 +109,7 @@ export type ActiveQuiz = {
 		| undefined
 		| ((value: string) => string)
 		| Array<(value: string) => string>;
-} & PreQuiz;
+} & Omit<PreQuiz, "otherInfo">;
 export type Pool = {
 	metadata?: {
 		/**

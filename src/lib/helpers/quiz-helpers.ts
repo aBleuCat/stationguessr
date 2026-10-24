@@ -398,14 +398,6 @@ export async function newQuiz(
 	const embed = new EmbedBuilder()
 		.setTitle(quiz.title)
 		.addFields(
-			{
-				name: `Pool${Array.isArray(quiz.pool) ? "s" : ""}`,
-				value: Array.isArray(quiz.pool)
-					? quiz.pool.join(", ")
-					: typeof quiz.pool === "string"
-						? quiz.pool
-						: "Custom",
-			},
 			{ name: "Rounds", value: quiz.rounds.toString() },
 			{
 				name: "Delay Between Questions",
@@ -416,12 +408,19 @@ export async function newQuiz(
 				value: quiz.ansWindow.toString() + " seconds",
 			},
 			{ name: "Repeat Type", value: quiz.repeat },
-			{ name: "Prize*", value: quiz.prize ?? "None" },
 		)
-		.setFooter({ text: "*Prize handling does not exist yet" })
 		.setColor("#89b4fa");
 	if (otherInfo?.data.fields) {
 		embed.addFields(otherInfo.data.fields);
+	}
+
+	if (Array.isArray(quiz.pool) || typeof quiz.pool === "string") {
+		embed.addFields({
+			name: `Pool${Array.isArray(quiz.pool) ? "s" : ""}`,
+			value: Array.isArray(quiz.pool)
+				? quiz.pool.join(", ")
+				: quiz.pool,
+		});
 	}
 
 	await queueMessage({
