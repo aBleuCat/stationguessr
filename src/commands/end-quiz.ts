@@ -6,7 +6,10 @@ import {
 } from "discord.js";
 import config from "../lib/config.js";
 import { endQuiz, quizzes } from "../lib/helpers/quiz-helpers.js";
-import { isAnyChannel, isGuildTextBasedChannel } from "../type-utils.js";
+import {
+	isAnyChannel,
+	isGuildTextBasedChannel,
+} from "../type-utils.js";
 
 const endQuizCommand = {
 	data: new SlashCommandBuilder()
@@ -31,7 +34,11 @@ const endQuizCommand = {
 		const channel =
 			interaction.options.getChannel("channel") ??
 			interaction.channel;
-		if (!channel || !isAnyChannel(channel) || !isGuildTextBasedChannel(channel)) {
+		if (
+			!channel ||
+			!isAnyChannel(channel) ||
+			!isGuildTextBasedChannel(channel)
+		) {
 			return interaction.reply({
 				content:
 					"Couldn't figure out which channel to kill quiz in, or that channel is the wrong type",
